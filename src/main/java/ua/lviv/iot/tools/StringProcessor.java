@@ -1,13 +1,17 @@
 package ua.lviv.iot.tools;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 public class StringProcessor {
 
     private String inputText;
     private StringBuilder resultStrBuilder;
-    private String wordPatternPart = "[a-zA-Z']*\\b";
+    private String[] alphabet = {"a", "b", "c", "d", "e", "f",
+            "g", "h", "i", "j", "k", "l", "m", "n", "o", "p",
+            "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
 
     public StringProcessor() {
     }
@@ -16,24 +20,28 @@ public class StringProcessor {
         this.inputText = inputText;
     }
 
-    public void processText() {
+    public void processTextUsingHashMap() {
         resultStrBuilder = new StringBuilder();
-        String[] alphabet = {"a|A", "b|B", "c|C", "d|D", "e|E", "f|F", "g|G", "h|H",
-                "i|I", "j|J", "k|K", "l|L", "m|M", "n|N", "o|O", "p|P", "q|Q", "r|R",
-                "s|S", "t|T", "u|U", "v|V", "w|W", "x|X", "y|Y", "z|Z"};
-        boolean isFound;
+        Map<String, List<String>> wordsMap = new LinkedHashMap<>();
+        String[] tempWordList = inputText.split("[^a-zA-Z']+");
+        boolean wasAppended;
+
+        for (String key : alphabet) {
+            wordsMap.put(key, new LinkedList<>());
+        }
+
+        for (String tempWord : tempWordList) {
+            wordsMap.get(tempWord.toLowerCase().subSequence(0, 1)).add(tempWord);
+        }
 
         resultStrBuilder.append("\t");
-        for (int letterIndex = 0; letterIndex < alphabet.length - 1; letterIndex++) {
-            isFound = false;
-            Pattern pattern = Pattern.compile("\\b[" + alphabet[letterIndex] + "]" + wordPatternPart);
-            Matcher matcher = pattern.matcher(inputText);
-
-            while (matcher.find()) {
-                resultStrBuilder.append(matcher.group() + " ");
-                isFound = true;
+        for (Map.Entry<String, List<String>> entry : wordsMap.entrySet()) {
+            wasAppended = false;
+            for (String word : entry.getValue()) {
+                resultStrBuilder.append(word).append(" ");
+                wasAppended = true;
             }
-            if (isFound) {
+            if (wasAppended) {
                 resultStrBuilder.append("\n\t");
             }
         }

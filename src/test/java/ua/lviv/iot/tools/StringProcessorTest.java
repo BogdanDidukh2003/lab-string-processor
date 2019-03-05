@@ -20,8 +20,8 @@ class StringProcessorTest {
     }
 
     @Test
-    void testProcessText() {
-        sp.processText();
+    void testProcessTextUsingHashMap() {
+        sp.processTextUsingHashMap();
         assertNotNull(sp.getResultString(), "getResultString does not work");
         assertEquals(expectedText, sp.getResultString(),
                 "Text was processed wrong!");

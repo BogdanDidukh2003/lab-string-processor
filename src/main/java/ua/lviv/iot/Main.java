@@ -17,7 +17,7 @@ public class Main {
 
     public static void main(String[] args) {
         StringProcessor sp = new StringProcessor(readInputText());
-        sp.processText();
+        sp.processTextUsingHashMap();
         System.out.println("Processed text:");
         sp.showResults();
     }
